@@ -13,10 +13,10 @@ abstract class BaseFragment : Fragment() {
     //endregion
 
     //region Fields
-    var suppressEnter = false
-    var suppressExit = false
-    var isPopping = false
-    var isConfigChange = false
+
+    private var isSuppressing = false
+    private var isPopping = false
+    private var isConfigChange = false
 
     //endregion
 
@@ -25,28 +25,31 @@ abstract class BaseFragment : Fragment() {
     override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
         if (isConfigChange) {
             Log.e(javaClass.simpleName, "isConfigChange")
-            isConfigChange = false
+            resetStates()
             return nothingAnim()
         }
+
         if (parentFragment is ParentFragment) {
-            if ((parentFragment as ParentFragment).isPopping) {
+            if ((parentFragment as BaseFragment).isPopping) {
                 Log.e(javaClass.simpleName, "parentFragment is Popping")
                 return nothingAnim()
             }
         }
+
         if (parentFragment != null && parentFragment.isRemoving) {
             Log.e(javaClass.simpleName, "parentFragment is Removing")
             return nothingAnim()
         }
+
         if (enter) {
             if (isPopping) {
                 Log.e(javaClass.simpleName, "isPopping")
-                isPopping = false
+                resetStates()
                 return pushAnim()
             }
-            if (suppressEnter) {
-                Log.e(javaClass.simpleName, "suppressEnter")
-                this.suppressEnter = false
+            if (isSuppressing) {
+                Log.e(javaClass.simpleName, "isSuppressing")
+                resetStates()
                 return nothingAnim()
             }
             Log.e(javaClass.simpleName, "enter")
@@ -55,15 +58,16 @@ abstract class BaseFragment : Fragment() {
 
         if (isPopping) {
             Log.e(javaClass.simpleName, "isPopping")
-            isPopping = false
+            resetStates()
             return popAnim()
         }
 
-        if (suppressExit) {
-            Log.e(javaClass.simpleName, "suppressExit")
-            this.suppressExit = false
+        if (isSuppressing) {
+            Log.e(javaClass.simpleName, "isSuppressing")
+            resetStates()
             return nothingAnim()
         }
+
         Log.e(javaClass.simpleName, "exit")
         return exitAnim()
     }
@@ -77,6 +81,24 @@ abstract class BaseFragment : Fragment() {
     //endregion
 
     //region Methods
+
+    open fun setSuppressing() {
+        this.isSuppressing = true
+    }
+
+    open fun setPopping() {
+        this.isPopping = true
+    }
+
+    open fun setConfigChange() {
+        this.isConfigChange = true
+    }
+
+    private fun resetStates() {
+        this.isPopping = false
+        this.isConfigChange = false
+        this.isSuppressing = false
+    }
 
     private fun enterAnim(): Animator {
         Log.e(javaClass.simpleName, "enterAnim")

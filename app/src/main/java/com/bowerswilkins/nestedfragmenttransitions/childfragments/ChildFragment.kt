@@ -5,22 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bowerswilkins.nestedfragmenttransitions.BaseFragment
-import com.bowerswilkins.nestedfragmenttransitions.parentfragments.ParentFragment
 import kotlinx.android.synthetic.main.fragment_child.*
 
 abstract class ChildFragment : BaseFragment() {
 
+    //region BaseFragment
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if (savedInstanceState != null) {
-            if (parentFragment is ParentFragment) {
-                if ((parentFragment as ParentFragment).isConfigChange) {
-                    if ((parentFragment as ParentFragment).getTopFragment() == this) {
-                        isConfigChange = true
-                    }
-                }
-            }
-        }
         container?.let {
             return FragmentView(it.context)
         }
@@ -34,11 +25,16 @@ abstract class ChildFragment : BaseFragment() {
         fragment_child_header.text = getTextViewText()
     }
 
+    //endregion
+
+    //region Abstract Methods
 
     abstract fun getTextViewText(): String
 
     abstract fun getButtonText(): String
 
     abstract fun getButtonAction(): View.OnClickListener
+
+    //endregion
 
 }

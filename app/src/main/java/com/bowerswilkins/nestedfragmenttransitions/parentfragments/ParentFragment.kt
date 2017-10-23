@@ -9,20 +9,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bowerswilkins.nestedfragmenttransitions.BaseFragment
-import com.bowerswilkins.nestedfragmenttransitions.MainActivity
 import com.bowerswilkins.nestedfragmenttransitions.R
 import com.bowerswilkins.nestedfragmenttransitions.childfragments.ChildFragment
 
 abstract class ParentFragment : BaseFragment() {
 
+    //region BaseFragment
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if (savedInstanceState != null) {
-            if (activity is MainActivity) {
-                if ((activity as MainActivity).getTopFragment() == this) {
-                    isConfigChange = true
-                }
-            }
-        }
         container?.let {
             return FragmentView(it.context)
         }
@@ -34,15 +28,28 @@ abstract class ParentFragment : BaseFragment() {
         return R.id.fragment_parent_container
     }
 
+    override fun setPopping() {
+        super.setPopping()
+        val topFragment = getTopFragment()
+        if (topFragment is ChildFragment) {
+            topFragment.setSuppressing()
+        }
+    }
+
+    //endregion
+
+    //region Methods
+
     fun handledBackPress(): Boolean {
+        Log.e(javaClass.simpleName, "handledBackPress")
         if (childFragmentManager.backStackEntryCount > 1) {
             val fragment = getTopFragment()
             if (fragment is ChildFragment) {
-                fragment.isPopping = true
+                fragment.setPopping()
                 val secondFragmentEntry = childFragmentManager.getBackStackEntryAt(childFragmentManager.backStackEntryCount - 2)
                 val secondFragment = childFragmentManager.findFragmentByTag(secondFragmentEntry.name)
                 if (secondFragment is ChildFragment) {
-                    secondFragment.isPopping = true
+                    secondFragment.setPopping()
                 }
 
                 this.childFragmentManager.popBackStack(fragment.getTagName(), FragmentManager.POP_BACK_STACK_INCLUSIVE)
@@ -53,12 +60,8 @@ abstract class ParentFragment : BaseFragment() {
     }
 
     fun addFragment(fragment: ChildFragment) {
-        fragment.suppressEnter = true
+        fragment.setSuppressing()
         childFragmentManager.beginTransaction()
-                /*  .setCustomAnimations(R.animator.fragment_nothing,
-                                       R.animator.fragment_nothing,
-                                       R.animator.fragment_push,
-                                       R.animator.fragment_pop)*/
                 .add(getContainerId(), fragment, fragment.getTagName())
                 .addToBackStack(fragment.getTagName())
                 .commit()
@@ -66,10 +69,6 @@ abstract class ParentFragment : BaseFragment() {
 
     fun replaceFragment(fragment: ChildFragment) {
         childFragmentManager.beginTransaction()
-                /*.setCustomAnimations(R.animator.fragment_enter,
-                                     R.animator.fragment_exit,
-                                     R.animator.fragment_push,
-                                     R.animator.fragment_pop)*/
                 .replace(getContainerId(), fragment, fragment.getTagName())
                 .addToBackStack(fragment.getTagName())
                 .commit()
@@ -80,4 +79,7 @@ abstract class ParentFragment : BaseFragment() {
         Log.e(javaClass.simpleName, "topFragment = " + (topfragment?.toString() ?: "null"))
         return topfragment
     }
+
+    //endregion
+
 }
