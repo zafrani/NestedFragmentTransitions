@@ -1,17 +1,28 @@
 package com.bowerswilkins.nestedfragmenttransitions.childfragments
 
-import android.app.Fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bowerswilkins.nestedfragmenttransitions.BaseFragment
+import com.bowerswilkins.nestedfragmenttransitions.parentfragments.ParentFragment
 import kotlinx.android.synthetic.main.fragment_child.*
 
-abstract class ChildFragment : Fragment() {
+abstract class ChildFragment : BaseFragment() {
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        if (savedInstanceState != null) {
+            if (parentFragment is ParentFragment) {
+                if ((parentFragment as ParentFragment).isConfigChange) {
+                    if ((parentFragment as ParentFragment).getTopFragment() == this) {
+                        isConfigChange = true
+                    }
+                }
+            }
+        }
         container?.let {
-            return FragmentView(container.context)
+            return FragmentView(it.context)
         }
         return null
     }
@@ -21,13 +32,13 @@ abstract class ChildFragment : Fragment() {
         fragment_child_button.text = getButtonText()
         fragment_child_button.setOnClickListener(getButtonAction())
         fragment_child_header.text = getTextViewText()
-
     }
 
-    abstract fun getTagName(): String
-    abstract fun getTextViewText(): String
-    abstract fun getButtonText(): String
-    abstract fun getButtonAction(): View.OnClickListener
 
+    abstract fun getTextViewText(): String
+
+    abstract fun getButtonText(): String
+
+    abstract fun getButtonAction(): View.OnClickListener
 
 }

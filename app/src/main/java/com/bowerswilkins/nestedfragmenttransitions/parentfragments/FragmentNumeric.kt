@@ -20,6 +20,11 @@ class FragmentNumeric : ParentFragment() {
         }
     }
 
+    override fun getTagName(): String {
+        return "FragmentNumeric"
+    }
+
+
     fun showFragmentOne() {
         addFragment(FragmentOne())
     }
