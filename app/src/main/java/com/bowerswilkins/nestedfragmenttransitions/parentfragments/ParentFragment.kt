@@ -28,14 +28,6 @@ abstract class ParentFragment : BaseFragment() {
         return R.id.fragment_parent_container
     }
 
-    override fun setPopping() {
-        super.setPopping()
-        val topFragment = getTopFragment()
-        if (topFragment is ChildFragment) {
-            topFragment.setSuppressing()
-        }
-    }
-
     //endregion
 
     //region Methods

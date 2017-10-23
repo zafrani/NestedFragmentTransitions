@@ -7,7 +7,7 @@ import com.bowerswilkins.nestedfragmenttransitions.R
 
 class FragmentView(context: Context) : FrameLayout(context) {
     init {
-        LayoutInflater.from(this.context).inflate(R.layout.fragment_child, this)
+        LayoutInflater.from(context).inflate(R.layout.fragment_child, this)
     }
 
     @Suppress("unused")

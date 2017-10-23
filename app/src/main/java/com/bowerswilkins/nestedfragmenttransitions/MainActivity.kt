@@ -46,9 +46,11 @@ class MainActivity : AppCompatActivity() {
             return
         }
         val secondFragmentEntry = fragmentManager.getBackStackEntryAt(fragmentManager.backStackEntryCount - 2)
-        val secondFragment = fragmentManager.findFragmentByTag(secondFragmentEntry.name)
-        if (secondFragment is ParentFragment) {
-            secondFragment.setPopping()
+        if (secondFragmentEntry != null) {
+            val secondFragment = fragmentManager.findFragmentByTag(secondFragmentEntry.name)
+            if (secondFragment is ParentFragment) {
+                secondFragment.setPopping()
+            }
         }
         super.onBackPressed()
     }

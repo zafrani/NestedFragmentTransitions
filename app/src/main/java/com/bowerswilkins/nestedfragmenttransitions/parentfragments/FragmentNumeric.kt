@@ -2,7 +2,6 @@ package com.bowerswilkins.nestedfragmenttransitions.parentfragments
 
 import android.os.Bundle
 import android.view.View
-import com.bowerswilkins.nestedfragmenttransitions.R
 import com.bowerswilkins.nestedfragmenttransitions.childfragments.FragmentOne
 import com.bowerswilkins.nestedfragmenttransitions.childfragments.FragmentThree
 import com.bowerswilkins.nestedfragmenttransitions.childfragments.FragmentTwo
