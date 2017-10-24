@@ -1,4 +1,4 @@
-package com.bowerswilkins.nestedfragmenttransitions.childfragments
+package com.bowerswilkins.nestedfragmenttransitions.parentfragments
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import com.bowerswilkins.nestedfragmenttransitions.R
 
 class FragmentView(context: Context) : FrameLayout(context) {
     init {
-        LayoutInflater.from(context).inflate(R.layout.fragment_child, this)
+        LayoutInflater.from(context).inflate(R.layout.fragment_parent, this)
     }
 
     @Suppress("unused")

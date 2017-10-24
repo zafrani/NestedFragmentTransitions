@@ -18,6 +18,10 @@ class FragmentAlpha : ParentFragment() {
         }
     }
 
+    override fun getTagName(): String {
+        return "FragmentAlpha"
+    }
+
     fun showFragmentA() {
         addFragment(FragmentA())
     }
