@@ -1,6 +1,7 @@
 package com.bowerswilkins.nestedfragmenttransitions.childfragments
 
 import android.view.View
+import com.bowerswilkins.nestedfragmenttransitions.GlobalClickListener
 import com.bowerswilkins.nestedfragmenttransitions.parentfragments.FragmentNumeric
 
 class FragmentOne : ChildFragment() {
@@ -17,10 +18,10 @@ class FragmentOne : ChildFragment() {
         return "Show Fragment Two"
     }
 
-    override fun getButtonAction(): View.OnClickListener {
-        return View.OnClickListener {
+    override fun getButtonAction(): GlobalClickListener {
+        return GlobalClickListener(View.OnClickListener {
             (parentFragment as FragmentNumeric).showFragmentTwo()
-        }
+        }, duration)
     }
 
 }

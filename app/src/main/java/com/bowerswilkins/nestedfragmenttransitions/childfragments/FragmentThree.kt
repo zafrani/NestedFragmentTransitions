@@ -2,6 +2,7 @@ package com.bowerswilkins.nestedfragmenttransitions.childfragments
 
 import android.animation.Animator
 import android.view.View
+import com.bowerswilkins.nestedfragmenttransitions.GlobalClickListener
 import com.bowerswilkins.nestedfragmenttransitions.MainActivity
 import com.bowerswilkins.nestedfragmenttransitions.parentfragments.FragmentNumeric
 
@@ -19,10 +20,10 @@ class FragmentThree : ChildFragment() {
         return "Show Fragment Alpha"
     }
 
-    override fun getButtonAction(): View.OnClickListener {
-        return View.OnClickListener {
+    override fun getButtonAction(): GlobalClickListener {
+        return GlobalClickListener(View.OnClickListener {
             (activity as MainActivity).showFragmentAlpha()
-        }
+        }, duration)
 
     }
 
