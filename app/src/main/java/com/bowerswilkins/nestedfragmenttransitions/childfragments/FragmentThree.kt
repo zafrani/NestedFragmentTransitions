@@ -1,5 +1,6 @@
 package com.bowerswilkins.nestedfragmenttransitions.childfragments
 
+import android.animation.Animator
 import android.view.View
 import com.bowerswilkins.nestedfragmenttransitions.MainActivity
 import com.bowerswilkins.nestedfragmenttransitions.parentfragments.FragmentNumeric

@@ -3,7 +3,7 @@
     <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
         android:duration="@integer/duration"
         android:interpolator="@android:anim/linear_interpolator"
-        android:propertyName="xFraction"
+        android:propertyName="yFraction"
         android:valueFrom="0"
-        android:valueTo="-1.0" />
+        android:valueTo="1.0" />
 </set>

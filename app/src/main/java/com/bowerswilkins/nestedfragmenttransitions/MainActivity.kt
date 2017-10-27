@@ -3,10 +3,12 @@ package com.bowerswilkins.nestedfragmenttransitions
 import android.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.support.annotation.CallSuper
 import android.util.Log
 import com.bowerswilkins.nestedfragmenttransitions.childfragments.ChildFragment
 import com.bowerswilkins.nestedfragmenttransitions.parentfragments.FragmentAlpha
+import com.bowerswilkins.nestedfragmenttransitions.parentfragments.FragmentK9
 import com.bowerswilkins.nestedfragmenttransitions.parentfragments.FragmentNumeric
 import com.bowerswilkins.nestedfragmenttransitions.parentfragments.ParentFragment
 
@@ -45,19 +47,33 @@ class MainActivity : AppCompatActivity() {
             finish()
             return
         }
-        val secondFragmentEntry = fragmentManager.getBackStackEntryAt(fragmentManager.backStackEntryCount - 2)
-        if (secondFragmentEntry != null) {
-            val secondFragment = fragmentManager.findFragmentByTag(secondFragmentEntry.name)
-            if (secondFragment is ParentFragment) {
-                secondFragment.setPopping()
-            }
-        }
+        /* val secondFragmentEntry = fragmentManager.getBackStackEntryAt(fragmentManager.backStackEntryCount - 2)
+         if (secondFragmentEntry != null) {
+             val secondFragment = fragmentManager.findFragmentByTag(secondFragmentEntry.name)
+             if (secondFragment is ParentFragment) {
+                 secondFragment.setPopping()
+             }
+         }*/
+        get2ndToLastParentFragment()?.setPopping()
         super.onBackPressed()
     }
 
     //endregion
 
     //region Methods
+
+    fun get2ndToLastParentFragment(): ParentFragment? {
+        if (fragmentManager.backStackEntryCount > 1) {
+            val secondFragmentEntry = fragmentManager.getBackStackEntryAt(fragmentManager.backStackEntryCount - 2)
+            val secondFragment = fragmentManager.findFragmentByTag(secondFragmentEntry.name)
+            if (secondFragment is ParentFragment) {
+                Log.e(javaClass.simpleName, "secondToLastParentFragment = " + secondFragment.getTagName())
+                return secondFragment
+            }
+
+        }
+        return null
+    }
 
     fun showFragmentNumeric() {
         val fragment = FragmentNumeric()
@@ -70,11 +86,41 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showFragmentAlpha() {
+        fragmentManager.findFragmentByTag("FragmentNumeric")?.let {
+            if (it is FragmentNumeric) {
+                it.suppress = true
+            }
+        }
+
         val fragment = FragmentAlpha()
         fragmentManager.beginTransaction()
                 .replace(R.id.activity_main_container, fragment, fragment.getTagName())
                 .addToBackStack(fragment.getTagName())
                 .commit()
+    }
+
+    fun showFragmentK9() {
+        fragmentManager.findFragmentByTag("FragmentAlpha")?.let {
+            if (it is FragmentAlpha) {
+                it.slideDown = true
+            }
+        }
+        fragmentManager.findFragmentByTag("FragmentNumeric")?.let {
+            if (it is FragmentNumeric) {
+                it.suppressAll()
+            }
+        }
+
+        fragmentManager.popBackStackImmediate()
+        Handler().postDelayed({
+                                  val fragment = FragmentK9()
+                                  fragmentManager.beginTransaction()
+                                          .replace(R.id.activity_main_container, fragment, fragment.getTagName())
+                                          .addToBackStack(fragment.getTagName())
+                                          .commit()
+                              },
+                              resources.getInteger(R.integer.duration).toLong())
+
     }
 
     fun getTopFragment(): Fragment? {

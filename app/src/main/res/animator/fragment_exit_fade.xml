@@ -3,14 +3,15 @@
     <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
         android:duration="@integer/duration"
         android:interpolator="@android:anim/linear_interpolator"
-        android:propertyName="xFraction"
-        android:valueFrom="1.0"
-        android:valueTo="0" />
+        android:propertyName="aAlpha"
+        android:valueFrom="1"
+        android:valueTo="0"
+        />
     <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
         android:duration="@integer/duration"
         android:interpolator="@android:anim/linear_interpolator"
         android:propertyName="zValue"
         android:valueFrom="10"
-        android:valueTo="11"
+        android:valueTo="-5"
         />
 </set>

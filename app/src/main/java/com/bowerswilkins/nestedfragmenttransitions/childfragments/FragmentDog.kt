@@ -1,27 +1,25 @@
 package com.bowerswilkins.nestedfragmenttransitions.childfragments
 
-import android.content.Intent
 import android.view.View
-import com.bowerswilkins.nestedfragmenttransitions.MainActivity
-import com.bowerswilkins.nestedfragmenttransitions.parentfragments.FragmentAlpha
+import com.bowerswilkins.nestedfragmenttransitions.parentfragments.FragmentK9
 
-class FragmentC : ChildFragment() {
+class FragmentDog : ChildFragment() {
 
     override fun getTagName(): String {
-        return "FragmentC"
+        return "FragmentDog"
     }
 
     override fun getTextViewText(): String {
-        return "Fragment C"
+        return "Fragment Dog"
     }
 
     override fun getButtonText(): String {
-        return "Show Fragment K9"
+        return "Show Fragment Wolf"
     }
 
     override fun getButtonAction(): View.OnClickListener {
         return View.OnClickListener {
-            (activity as MainActivity).showFragmentK9()
+            (parentFragment as FragmentK9).showFragmentWolf()
         }
     }
 

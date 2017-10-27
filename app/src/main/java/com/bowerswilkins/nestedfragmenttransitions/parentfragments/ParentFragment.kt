@@ -1,5 +1,6 @@
 package com.bowerswilkins.nestedfragmenttransitions.parentfragments
 
+import android.animation.Animator
 import android.app.Fragment
 import android.app.FragmentManager
 import android.os.Bundle
@@ -18,7 +19,7 @@ abstract class ParentFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         container?.let {
-            return FragmentView(it.context)
+            return ParentFragmentView(it.context)
         }
         return null
     }
@@ -32,17 +33,30 @@ abstract class ParentFragment : BaseFragment() {
 
     //region Methods
 
-    fun handledBackPress(): Boolean {
+    fun get2ndToLastChildFragment(): ChildFragment? {
+        if (childFragmentManager.backStackEntryCount > 1) {
+            val secondFragmentEntry = childFragmentManager.getBackStackEntryAt(childFragmentManager.backStackEntryCount - 2)
+            val secondFragment = childFragmentManager.findFragmentByTag(secondFragmentEntry.name)
+            if (secondFragment is ChildFragment) {
+                return secondFragment
+            }
+
+        }
+        return null
+    }
+
+    open fun handledBackPress(): Boolean {
         Log.e(javaClass.simpleName, "handledBackPress")
         if (childFragmentManager.backStackEntryCount > 1) {
             val fragment = getTopFragment()
             if (fragment is ChildFragment) {
                 fragment.setPopping()
-                val secondFragmentEntry = childFragmentManager.getBackStackEntryAt(childFragmentManager.backStackEntryCount - 2)
+               /* val secondFragmentEntry = childFragmentManager.getBackStackEntryAt(childFragmentManager.backStackEntryCount - 2)
                 val secondFragment = childFragmentManager.findFragmentByTag(secondFragmentEntry.name)
                 if (secondFragment is ChildFragment) {
                     secondFragment.setPopping()
-                }
+                }*/
+                get2ndToLastChildFragment()?.setPopping()
 
                 this.childFragmentManager.popBackStack(fragment.getTagName(), FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 return true
@@ -67,9 +81,27 @@ abstract class ParentFragment : BaseFragment() {
     }
 
     fun getTopFragment(): Fragment? {
-        val topfragment = childFragmentManager.findFragmentById(getContainerId())
+        val topfragment = childFragmentManager?.findFragmentById(getContainerId())
         Log.e(javaClass.simpleName, "topFragment = " + (topfragment?.toString() ?: "null"))
         return topfragment
+    }
+
+    fun suppressAll() {
+        setSuppressing()
+        getTopFragment()?.let {
+            if (it is ChildFragment) {
+                it.setSuppressing()
+            }
+        }
+    }
+
+    override fun setPopping() {
+        super.setPopping()
+        getTopFragment()?.let {
+            if (it is ChildFragment) {
+                it.setSuppressing()
+            }
+        }
     }
 
     //endregion

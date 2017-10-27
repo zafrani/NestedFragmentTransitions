@@ -13,7 +13,7 @@ abstract class ChildFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         container?.let {
-            return FragmentView(it.context)
+            return ChildFragmentView(it.context)
         }
         return null
     }

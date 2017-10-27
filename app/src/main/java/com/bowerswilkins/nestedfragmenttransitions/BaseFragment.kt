@@ -23,6 +23,27 @@ abstract class BaseFragment : Fragment() {
     //region Fragment
 
     override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
+        val anim: Animator
+        if (this.isConfigChange) {
+            anim = nothingAnim()
+        } else if (isParentFragmentRemovingOrPopping()) {
+            anim = nothingAnim()
+        } else if (isSuppressing) {
+            anim = nothingAnim()
+        } else if (enter) {
+            anim = when {
+                this.isPopping -> pushAnim()
+                else -> enterAnim()
+            }
+        } else {
+            anim = when {
+                this.isPopping -> popAnim()
+                else -> exitAnim()
+            }
+        }
+        resetStates()
+        return anim
+/*
         if (isConfigChange) {
             Log.e(javaClass.simpleName, "isConfigChange")
             resetStates()
@@ -69,7 +90,7 @@ abstract class BaseFragment : Fragment() {
         }
 
         Log.e(javaClass.simpleName, "exit")
-        return exitAnim()
+        return exitAnim()*/
     }
 
     //endregion
@@ -81,6 +102,11 @@ abstract class BaseFragment : Fragment() {
     //endregion
 
     //region Methods
+    private fun isParentFragmentRemovingOrPopping(): Boolean {
+        return (parentFragment != null && parentFragment.isRemoving) || // Checks if parent fragment is being removed.
+               ((parentFragment is ParentFragment) && (parentFragment as BaseFragment).isPopping) // Checks if parent fragment is being popped.
+    }
+
 
     open fun setSuppressing() {
         this.isSuppressing = true
@@ -100,27 +126,27 @@ abstract class BaseFragment : Fragment() {
         this.isSuppressing = false
     }
 
-    private fun enterAnim(): Animator {
+    open protected fun enterAnim(): Animator {
         Log.e(javaClass.simpleName, "enterAnim")
         return AnimatorInflater.loadAnimator(activity, R.animator.fragment_enter)
     }
 
-    private fun exitAnim(): Animator {
+    open protected fun exitAnim(): Animator {
         Log.e(javaClass.simpleName, "exitAnim")
         return AnimatorInflater.loadAnimator(activity, R.animator.fragment_exit)
     }
 
-    private fun pushAnim(): Animator {
+    open protected fun pushAnim(): Animator {
         Log.e(javaClass.simpleName, "pushAnim")
         return AnimatorInflater.loadAnimator(activity, R.animator.fragment_push)
     }
 
-    private fun popAnim(): Animator {
+    open protected fun popAnim(): Animator {
         Log.e(javaClass.simpleName, "popAnim")
         return AnimatorInflater.loadAnimator(activity, R.animator.fragment_pop)
     }
 
-    private fun nothingAnim(): Animator {
+    open protected fun nothingAnim(): Animator {
         Log.e(javaClass.simpleName, "nothingAnim")
         return AnimatorInflater.loadAnimator(activity, R.animator.fragment_nothing)
     }
